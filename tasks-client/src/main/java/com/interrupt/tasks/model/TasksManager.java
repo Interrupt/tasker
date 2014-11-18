@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TasksManager {
+    // in memory cache of tasks
     private HashMap<String, Task> tasks = new HashMap<String, Task>();
 
     public TasksManager() { }
