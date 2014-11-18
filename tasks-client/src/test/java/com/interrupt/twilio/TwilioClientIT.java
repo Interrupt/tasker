@@ -8,5 +8,7 @@ public class TwilioClientIT {
     public void shouldSendTextMessage() {
         TwilioClient client = new TwilioClient();
         client.sendText("7017213796", "Sup Dude");
+
+        // now go look at your phone
     }
 }

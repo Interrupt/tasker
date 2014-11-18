@@ -2,6 +2,7 @@ package com.interrupt.tasks.api.v1;
 
 import com.interrupt.tasks.model.Task;
 import com.interrupt.tasks.model.TasksManager;
+import com.interrupt.twilio.TwilioClient;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 public class Tasks {
 
     private static TasksManager manager = new TasksManager();
+    private static TwilioClient twilioClient = new TwilioClient();
 
     static {
         manager.create("task1", new Task("Hello World", "This is the first task!"));
@@ -50,10 +52,10 @@ public class Tasks {
 
         // send the finished notification when the task changes to done
         if(!existing.getDone() && task.getDone()) {
-            // TODO: Twilio here
+            twilioClient.sendText("7017213796", String.format("\"%s\" task has been marked as done.", task.getTitle()));
         }
 
-        return manager.create(key, new Task(task.getTitle(), task.getBody()));
+        return manager.create(key, task);
     }
 
     // Delete a task
