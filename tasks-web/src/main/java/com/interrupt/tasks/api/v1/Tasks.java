@@ -37,7 +37,7 @@ public class Tasks {
     @Produces(MediaType.APPLICATION_JSON)
     public Task createTask(@PathParam("key") String key, Task task) {
         if(manager.get(key) != null) throw new RuntimeException("Cannot create task, it already exists");
-        return manager.create("again", task);
+        return manager.create(key, task);
     }
 
     // Update details for a task
