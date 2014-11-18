@@ -12,6 +12,11 @@ public class Tasks {
 
     private static TasksManager manager = new TasksManager();
 
+    static {
+        manager.create("task1", new Task("Hello World", "This is the first task!"));
+        manager.create("task2", new Task("Task Two", "And this is the second task."));
+    }
+
     // Return a list of all of the tasks
     @GET @Path("/")
     @Produces(MediaType.APPLICATION_JSON)

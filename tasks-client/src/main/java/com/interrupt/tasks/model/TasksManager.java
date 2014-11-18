@@ -7,10 +7,7 @@ import java.util.List;
 public class TasksManager {
     private HashMap<String, Task> tasks = new HashMap<String, Task>();
 
-    public TasksManager() {
-        create("task1", new Task("Hello World", "This is the first task!"));
-        create("task2", new Task("Task Two", "And this is the second task."));
-    }
+    public TasksManager() { }
 
     public HashMap<String, Task> getAll() {
         return tasks;
