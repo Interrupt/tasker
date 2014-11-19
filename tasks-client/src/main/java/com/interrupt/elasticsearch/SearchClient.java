@@ -8,18 +8,18 @@ import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Delete;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
-import io.searchbox.indices.DeleteIndex;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class SearchClient {
-    JestClient client;
+    private static JestClient client;
     final Logger logger = Logger.getLogger(SearchClient.class.getName());
 
-    public SearchClient() {
+    static {
         // TODO: Move API keys to a properties file
+        // TODO: Move this client to be dependency injected instead of being static
         String connectionUrl = "https://site:8d32324fc58e4f5a3e0163d5d0df40d5@bofur-us-east-1.searchly.com";
         JestClientFactory factory = new JestClientFactory();
 
@@ -31,49 +31,7 @@ public class SearchClient {
         client = factory.getObject();
     }
 
-    public List<Task> search(String query) {
-        try {
-            String fullQuery =
-                    "{\n" +
-                    "  \"query\": {\n" +
-                    "  \"multi_match\" : {\n" +
-                    "    \"query\": \"" + query + "\", \n" +
-                    "    \"fields\": [ \"title^3\", \"body\" ] \n" +
-                    "  }\n" +
-                    " }\n" +
-                    "}";
-
-            Search search = new Search.Builder(fullQuery)
-                    .addIndex("tasks")
-                    .addType("task")
-                    .build();
-
-            JestResult results = client.execute(search);
-            return results.getSourceAsObjectList(Task.class);
-        }
-        catch (Exception e) {
-            logger.severe(e.getMessage());
-            return new ArrayList<>();
-        }
-    }
-
-    public void index(String key, Task task) {
-        try {
-            Index index = new Index.Builder(task).index("tasks").type("task").id(key).build();
-            client.execute(index);
-        }
-        catch (Exception e) {
-            logger.severe(e.getMessage());
-        }
-    }
-
-    public void deleteIndex(String key) {
-        try {
-            Delete delete = new Delete.Builder(key).index("tasks").build();
-            client.execute(delete);
-        }
-        catch(Exception e) {
-            logger.severe(e.getMessage());
-        }
+    public static JestClient getClient() {
+        return client;
     }
 }

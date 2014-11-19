@@ -1,5 +1,7 @@
-package com.interrupt.twilio;
+package com.interrupt.twilio.commands;
 
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.SmsFactory;
@@ -11,17 +13,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class TwilioClient {
-    // TODO: Get API keys out of a properties file, instead of hard coding them
-    final TwilioRestClient client = new TwilioRestClient("AC3c19e7ddc19aa7f5d2d38d732d258fc0", "7302f064596c0c2b5aeee47d2439ed8a");
-    final Logger logger = Logger.getLogger(TwilioClient.class.getName());
+public class SendTextCommand extends HystrixCommand<Boolean> {
 
-    /**
-     * Sends a text message to the given number
-     * @param number
-     * @param message
-     */
-    public void sendText(String number, String message) {
+    // TODO: Put these API keys in a properties file
+    // TODO: Get these via dependency injection?
+    private static TwilioRestClient client =
+            new TwilioRestClient("AC3c19e7ddc19aa7f5d2d38d732d258fc0", "7302f064596c0c2b5aeee47d2439ed8a");
+
+    final Logger logger = Logger.getLogger(SendTextCommand.class.getName());
+    private String number;
+    private String message;
+
+    public SendTextCommand(String number, String message) {
+        super(HystrixCommandGroupKey.Factory.asKey("Twilio"));
+        this.number = number;
+        this.message = message;
+    }
+
+    @Override
+    protected Boolean run() throws Exception {
         final Account mainAccount = client.getAccount();
         final SmsFactory messageFactory = mainAccount.getSmsFactory();
 
@@ -34,6 +44,9 @@ public class TwilioClient {
             messageFactory.create(messageParams);
         } catch (TwilioRestException e) {
             logger.severe(e.getErrorMessage());
+            return false;
         }
+
+        return true;
     }
 }

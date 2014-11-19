@@ -1,5 +1,8 @@
 package com.interrupt.tasks.model;
 
+import com.interrupt.elasticsearch.commands.DeleteCommand;
+import com.interrupt.elasticsearch.commands.IndexCommand;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +22,18 @@ public class TasksManager {
     }
 
     public boolean remove(String key) {
+        // remove the search index
+        new DeleteCommand(key).queue();
+
         return tasks.remove(key) != null;
     }
 
     public Task create(String key, Task task) {
         tasks.put(key, task);
+
+        // index the task for searching
+        new IndexCommand(key, task).queue();
+
         return task;
     }
 }

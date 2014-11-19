@@ -1,5 +1,8 @@
 package com.interrupt.elasticsearch;
 
+import com.interrupt.elasticsearch.commands.DeleteCommand;
+import com.interrupt.elasticsearch.commands.IndexCommand;
+import com.interrupt.elasticsearch.commands.SearchCommand;
 import com.interrupt.tasks.model.Task;
 import org.junit.Test;
 
@@ -12,14 +15,14 @@ public class SearchIT {
 
     @Test
     public void shouldIndexTask() {
-        SearchClient client = new SearchClient();
-        client.index("testkey", new Task("Test Search Title", "Test Search Body 2"));
+        IndexCommand command = new IndexCommand("testkey", new Task("Test Search Title", "Test Search Body 2"));
+        Boolean result = command.execute();
+        assertEquals(true, result);
     }
 
     @Test
     public void shouldExecuteSearch() {
-        SearchClient client = new SearchClient();
-        List<Task> found = client.search("Search");
+        List<Task> found = new SearchCommand("Search").execute();
 
         assertNotNull(found);
         assertEquals(1, found.size());
@@ -27,10 +30,12 @@ public class SearchIT {
 
     @Test
     public void shouldDeleteIndex() throws Exception {
-        SearchClient client = new SearchClient();
-        client.deleteIndex("testkey");
 
-        List<Task> found = client.search("Search");
+        DeleteCommand command = new DeleteCommand("testkey");
+        Boolean result = command.execute();
+        assertEquals(true, result);
+
+        List<Task> found = new SearchCommand("Search").execute();
         assertNotNull(found);
         assertEquals(0, found.size());
     }
