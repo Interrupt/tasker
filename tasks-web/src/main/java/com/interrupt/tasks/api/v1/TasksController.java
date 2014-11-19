@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 
 @Path("tasks")
-public class Tasks {
+public class TasksController {
 
     private static TasksManager manager = new TasksManager();
     private static TwilioClient twilioClient = new TwilioClient();
