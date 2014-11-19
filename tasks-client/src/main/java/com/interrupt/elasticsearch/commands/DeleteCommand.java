@@ -3,6 +3,7 @@ package com.interrupt.elasticsearch.commands;
 import com.interrupt.elasticsearch.SearchClient;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Delete;
 
@@ -18,7 +19,10 @@ public class DeleteCommand extends HystrixCommand<Boolean> {
     private String key;
 
     public DeleteCommand(String key) {
-        super(HystrixCommandGroupKey.Factory.asKey("Search"));
+        super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("Search")).
+                andCommandPropertiesDefaults(HystrixCommandProperties.Setter().
+                        withExecutionIsolationThreadTimeoutInMilliseconds(5000)));
+
         this.key = key;
         client = SearchClient.getClient();
     }

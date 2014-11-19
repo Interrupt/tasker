@@ -4,6 +4,7 @@ import com.interrupt.elasticsearch.SearchClient;
 import com.interrupt.tasks.model.Task;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
@@ -22,7 +23,10 @@ public class SearchCommand extends HystrixCommand<List<Task>> {
     private String query;
 
     public SearchCommand(String query) {
-        super(HystrixCommandGroupKey.Factory.asKey("Search"));
+        super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("Search")).
+                andCommandPropertiesDefaults(HystrixCommandProperties.Setter().
+                        withExecutionIsolationThreadTimeoutInMilliseconds(5000)));
+
         this.query = query;
         client = SearchClient.getClient();
     }

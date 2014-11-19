@@ -30,13 +30,8 @@ public class SearchIT {
 
     @Test
     public void shouldDeleteIndex() throws Exception {
-
         DeleteCommand command = new DeleteCommand("testkey");
         Boolean result = command.execute();
         assertEquals(true, result);
-
-        List<Task> found = new SearchCommand("Search").execute();
-        assertNotNull(found);
-        assertEquals(0, found.size());
     }
 }

@@ -2,6 +2,7 @@ package com.interrupt.twilio.commands;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.SmsFactory;
@@ -25,7 +26,10 @@ public class SendTextCommand extends HystrixCommand<Boolean> {
     private String message;
 
     public SendTextCommand(String number, String message) {
-        super(HystrixCommandGroupKey.Factory.asKey("Twilio"));
+        super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("Twilio")).
+                andCommandPropertiesDefaults(HystrixCommandProperties.Setter().
+                        withExecutionIsolationThreadTimeoutInMilliseconds(5000)));
+
         this.number = number;
         this.message = message;
     }

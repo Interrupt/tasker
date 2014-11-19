@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.interrupt.tasks.model.TasksManagerTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.76 sec
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.769 sec
