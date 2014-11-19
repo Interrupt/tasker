@@ -15,11 +15,13 @@ public class SearchClient {
     public SearchClient() {
         String connectionUrl = "https://site:8d32324fc58e4f5a3e0163d5d0df40d5@bofur-us-east-1.searchly.com";
         JestClientFactory factory = new JestClientFactory();
+
         factory.setHttpClientConfig(new HttpClientConfig
                 .Builder(connectionUrl)
                 .multiThreaded(true)
                 .build());
-        JestClient client = factory.getObject();
+
+        client = factory.getObject();
     }
 
     public JestResult Search(String query) {
