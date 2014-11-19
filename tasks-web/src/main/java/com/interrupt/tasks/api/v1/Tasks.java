@@ -40,9 +40,12 @@ public class Tasks {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Task createTask(@PathParam("key") String key, Task task) {
-        if(manager.get(key) != null) throw new RuntimeException("Cannot create task, it already exists");
+        if(manager.get(key) != null)
+            throw new RuntimeException("Cannot create task, it already exists");
+
         manager.create(key, task);
         searchClient.index(key, task);
+
         return task;
     }
 
@@ -52,7 +55,8 @@ public class Tasks {
     @Produces(MediaType.APPLICATION_JSON)
     public Task updateTask(@PathParam("key") String key, Task task) {
         Task existing = manager.get(key);
-        if(existing == null) throw new RuntimeException("Cannot update task, it does not exist");
+        if(existing == null)
+            throw new RuntimeException("Cannot update task, it does not exist");
 
         manager.create(key, task);
 
@@ -70,7 +74,11 @@ public class Tasks {
     @DELETE @Path("/{key}")
     @Produces(MediaType.APPLICATION_JSON)
     public Boolean deleteTask(@PathParam("key") String key) {
-        if(manager.get(key) == null) throw new RuntimeException("Cannot delete task, it does not exist");
+        if(manager.get(key) == null)
+            throw new RuntimeException("Cannot delete task, it does not exist");
+
+        searchClient.deleteIndex(key);
+
         return manager.remove(key);
     }
 }
