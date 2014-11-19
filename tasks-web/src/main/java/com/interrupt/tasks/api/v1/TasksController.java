@@ -38,7 +38,7 @@ public class TasksController {
     @Produces(MediaType.APPLICATION_JSON)
     public Task createTask(@PathParam("key") String key, Task task) {
         if(manager.get(key) != null)
-            throw new RuntimeException("Cannot create task, it already exists");
+            throw new WebApplicationException("Cannot create task, it already exists");
 
         manager.create(key, task);
 
@@ -52,7 +52,7 @@ public class TasksController {
     public Task updateTask(@PathParam("key") String key, Task task) {
         Task existing = manager.get(key);
         if(existing == null)
-            throw new RuntimeException("Cannot update task, it does not exist");
+            throw new WebApplicationException("Cannot update task, it does not exist");
 
         manager.create(key, task);
 
@@ -74,7 +74,7 @@ public class TasksController {
     @Produces(MediaType.APPLICATION_JSON)
     public Boolean deleteTask(@PathParam("key") String key) {
         if(manager.get(key) == null)
-            throw new RuntimeException("Cannot delete task, it does not exist");
+            throw new WebApplicationException("Cannot delete task, it does not exist");
 
         return manager.remove(key);
     }

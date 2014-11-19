@@ -39,7 +39,7 @@ public class Main {
             ExceptionMapper<WebApplicationException> {
         @Override
         public Response toResponse(WebApplicationException ex) {
-            return Response.status(500).entity(Exceptions.getStackTraceAsString(ex)).type("text/plain")
+            return Response.status(500).entity("{ \"error\": \"" + ex.getMessage() + "\"}").type("application/json")
                     .build();
         }
     }
