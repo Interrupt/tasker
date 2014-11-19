@@ -5,8 +5,10 @@ import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.core.Delete;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
+import io.searchbox.indices.DeleteIndex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class SearchClient {
         client = factory.getObject();
     }
 
-    public List<Task> Search(String query) {
+    public List<Task> search(String query) {
         try {
             String fullQuery =
                     "{\n" +
@@ -48,17 +50,29 @@ public class SearchClient {
 
             JestResult results = client.execute(search);
             return results.getSourceAsObjectList(Task.class);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.severe(e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    public void Index(String key, Task task) {
+    public void index(String key, Task task) {
         try {
             Index index = new Index.Builder(task).index("tasks").type("task").id(key).build();
             client.execute(index);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
+            logger.severe(e.getMessage());
+        }
+    }
+
+    public void deleteIndex(String key) {
+        try {
+            Delete delete = new Delete.Builder(key).index("tasks").build();
+            client.execute(delete);
+        }
+        catch(Exception e) {
             logger.severe(e.getMessage());
         }
     }

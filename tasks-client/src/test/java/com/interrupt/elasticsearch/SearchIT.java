@@ -13,15 +13,25 @@ public class SearchIT {
     @Test
     public void shouldIndexTask() {
         SearchClient client = new SearchClient();
-        client.Index("testkey", new Task("Test Search Title", "Test Search Body"));
+        client.index("testkey", new Task("Test Search Title", "Test Search Body 2"));
     }
 
     @Test
     public void shouldExecuteSearch() {
         SearchClient client = new SearchClient();
-        List<Task> found = client.Search("Search");
+        List<Task> found = client.search("Search");
 
         assertNotNull(found);
-        assertEquals(found.size(), 1);
+        assertEquals(1, found.size());
+    }
+
+    @Test
+    public void shouldDeleteIndex() throws Exception {
+        SearchClient client = new SearchClient();
+        client.deleteIndex("testkey");
+
+        List<Task> found = client.search("Search");
+        assertNotNull(found);
+        assertEquals(0, found.size());
     }
 }

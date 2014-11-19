@@ -1,5 +1,6 @@
 package com.interrupt.tasks.api.v1;
 
+import com.interrupt.elasticsearch.SearchClient;
 import com.interrupt.tasks.model.Task;
 import com.interrupt.tasks.model.TasksManager;
 import com.interrupt.twilio.TwilioClient;
@@ -13,6 +14,7 @@ public class Tasks {
 
     private static TasksManager manager = new TasksManager();
     private static TwilioClient twilioClient = new TwilioClient();
+    private static SearchClient searchClient = new SearchClient();
 
     static {
         manager.create("task1", new Task("Hello World", "This is the first task!"));
@@ -39,7 +41,9 @@ public class Tasks {
     @Produces(MediaType.APPLICATION_JSON)
     public Task createTask(@PathParam("key") String key, Task task) {
         if(manager.get(key) != null) throw new RuntimeException("Cannot create task, it already exists");
-        return manager.create(key, task);
+        manager.create(key, task);
+        searchClient.index(key, task);
+        return task;
     }
 
     // Update details for a task
@@ -50,12 +54,16 @@ public class Tasks {
         Task existing = manager.get(key);
         if(existing == null) throw new RuntimeException("Cannot update task, it does not exist");
 
+        manager.create(key, task);
+
         // send the finished notification when the task changes to done
         if(!existing.getDone() && task.getDone()) {
             twilioClient.sendText("7017213796", String.format("\"%s\" task has been marked as done.", task.getTitle()));
         }
 
-        return manager.create(key, task);
+        searchClient.index(key, task);
+
+        return task;
     }
 
     // Delete a task
