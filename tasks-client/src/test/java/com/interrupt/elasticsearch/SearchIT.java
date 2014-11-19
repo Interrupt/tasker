@@ -1,9 +1,11 @@
 package com.interrupt.elasticsearch;
 
 import com.interrupt.tasks.model.Task;
-import io.searchbox.client.JestResult;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class SearchIT {
@@ -17,8 +19,9 @@ public class SearchIT {
     @Test
     public void shouldExecuteSearch() {
         SearchClient client = new SearchClient();
-        JestResult hits = client.Search("Search");
+        List<Task> found = client.Search("Search");
 
-        assertNotNull(hits);
+        assertNotNull(found);
+        assertEquals(found.size(), 1);
     }
 }
