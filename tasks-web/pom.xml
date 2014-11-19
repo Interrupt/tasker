@@ -11,5 +11,13 @@
     <artifactId>tasks-web</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.interrupt</groupId>
+            <artifactId>tasks-client</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <name>Tasks Web Api</name>
 </project>
