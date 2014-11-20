@@ -1,5 +1,6 @@
 package com.interrupt.tasks.api.v1;
 
+import com.google.gson.JsonObject;
 import com.interrupt.elasticsearch.commands.SearchCommand;
 import com.interrupt.tasks.model.Task;
 import com.interrupt.tasks.model.TasksManager;
@@ -85,8 +86,8 @@ public class TasksController {
     // Return a list of all of the tasks
     @GET @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Task> searchTasks(@QueryParam("query") String query) {
+    public String searchTasks(@QueryParam("query") String query) {
         SearchCommand searchCommand = new SearchCommand(query);
-        return searchCommand.execute();
+        return searchCommand.execute().toString();
     }
 }

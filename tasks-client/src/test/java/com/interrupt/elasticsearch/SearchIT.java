@@ -1,5 +1,6 @@
 package com.interrupt.elasticsearch;
 
+import com.google.gson.JsonObject;
 import com.interrupt.elasticsearch.commands.DeleteCommand;
 import com.interrupt.elasticsearch.commands.IndexCommand;
 import com.interrupt.elasticsearch.commands.SearchCommand;
@@ -23,10 +24,8 @@ public class SearchIT {
 
     @Test
     public void shouldExecuteSearch() {
-        Map<String, Task> found = new SearchCommand("Search").execute();
-
+        JsonObject found = new SearchCommand("Search").execute();
         assertNotNull(found);
-        assertEquals(1, found.size());
     }
 
     @Test

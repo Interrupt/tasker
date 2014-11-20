@@ -11,16 +11,13 @@ import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
  * Command to run a search for tasks on a given query, and return a sorted list of the found items
  */
-public class SearchCommand extends HystrixCommand<Map<String, Task>> {
+public class SearchCommand extends HystrixCommand<JsonObject> {
 
     final private Logger logger = Logger.getLogger(SearchCommand.class.getName());
     private JestClient client;
@@ -36,7 +33,7 @@ public class SearchCommand extends HystrixCommand<Map<String, Task>> {
     }
 
     @Override
-    protected Map<String, Task> run() throws Exception {
+    protected JsonObject run() throws Exception {
         try {
             String fullQuery =
                             "{\n" +
@@ -54,34 +51,16 @@ public class SearchCommand extends HystrixCommand<Map<String, Task>> {
                     .build();
 
             JestResult results = client.execute(search);
-
-            // find all of the object keys
-            List<String> keys = new ArrayList<>();
-
-            JsonArray hits = results.getJsonObject().getAsJsonObject("hits").getAsJsonArray("hits");
-            for(int i = 0; i < hits.size(); i++) {
-                JsonObject obj = hits.get(i).getAsJsonObject();
-                keys.add(obj.get("_id").getAsString());
-            }
-
-            // get all of the objects
-            List<Task> foundTasks = results.getSourceAsObjectList(Task.class);
-
-            Map<String, Task> finalList = new HashMap<>();
-            for(int i = 0; i < keys.size(); i++) {
-                finalList.put(keys.get(i), foundTasks.get(i));
-            }
-
-            return finalList;
+            return results.getJsonObject();
         }
         catch (Exception e) {
             logger.severe(e.getMessage());
-            return new HashMap<>();
+            return null;
         }
     }
 
     @Override
-    protected Map<String, Task> getFallback() {
-        return new HashMap<>();
+    protected JsonObject getFallback() {
+        return null;
     }
 }
