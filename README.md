@@ -5,18 +5,33 @@ Test REST API using Java / Jersey, runs an embedded Grizzly web server.
 
 Starts up on http://localhost:8080/tasker
 
-## Get all tasks
-GET /tasks
+### Get all tasks
+<code>GET</code> /tasks
 
-## Get one task
-GET /tasks/{key}
+### Get one task
+<code>GET</code> /tasks/{key}
 
-## Create a new task
-POST /tasks/{key}
+### Create a new task
+<code>POST</code> /tasks/{key}
 
-## Update a task
-PUT /tasks/{key}
+<code>
+{
+"body": "Another Body",
+"title": "Hello World"
+}
+</code>
 
-## Delete a task
-DELETE /tasks/{key}
+### Update a task
+<code>PUT</code> /tasks/{key}
+
+<code>
+{
+"body": "Another Body",
+"title": "Hello World",
+"done": true
+}
+</code>
+
+### Delete a task
+<code>DELETE</code> /tasks/{key}
 
