@@ -1,12 +1,15 @@
 package com.interrupt.tasks.api.v1;
 
+import com.interrupt.elasticsearch.commands.SearchCommand;
 import com.interrupt.tasks.model.Task;
 import com.interrupt.tasks.model.TasksManager;
 import com.interrupt.twilio.commands.SendTextCommand;
+import io.searchbox.core.Search;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
+import java.util.Map;
 
 @Path("tasks")
 public class TasksController {
@@ -77,5 +80,13 @@ public class TasksController {
             throw new WebApplicationException("Cannot delete task, it does not exist");
 
         return manager.remove(key);
+    }
+
+    // Return a list of all of the tasks
+    @GET @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, Task> searchTasks(@QueryParam("query") String query) {
+        SearchCommand searchCommand = new SearchCommand(query);
+        return searchCommand.execute();
     }
 }

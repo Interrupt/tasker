@@ -7,6 +7,7 @@ import com.interrupt.tasks.model.Task;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,7 +23,7 @@ public class SearchIT {
 
     @Test
     public void shouldExecuteSearch() {
-        List<Task> found = new SearchCommand("Search").execute();
+        Map<String, Task> found = new SearchCommand("Search").execute();
 
         assertNotNull(found);
         assertEquals(1, found.size());

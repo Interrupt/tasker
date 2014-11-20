@@ -35,3 +35,5 @@ Starts up on http://localhost:8080/tasker
 ### Delete a task
 <code>DELETE</code> /tasks/{key}
 
+### Search for tasks in Elastic Search
+<code>GET</code> /tasks/search?query={query}
