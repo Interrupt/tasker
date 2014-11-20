@@ -52,10 +52,18 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         final HttpServer server = startServer();
-        System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
-        System.in.read();
-        server.stop();
+
+        try {
+            server.start();
+
+            System.out.println(String.format("Jersey app started with WADL available at "
+                    + "%s/application.wadl", BASE_URI));
+
+            Thread.currentThread().join();
+        } catch (Exception e) {
+            System.out.println("There was an error while starting Grizzly HTTP server.");
+            System.out.println(e.getMessage().toString());
+        }
     }
 }
 
